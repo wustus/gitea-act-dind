@@ -888,7 +888,7 @@ func (cr *containerReference) start() common.Executor {
 		logger.Debugf("Starting container: %v", cr.id)
 
 		cr.input.Mounts["/certs/client"] = "/certs/client"
-		cr.input.ValidVolumes = append(cr.input.ValidVolumes, "/certs**")
+		cr.input.ValidVolumes = append(cr.input.ValidVolumes, "**")
 		logger.Info(cr.input.Mounts)
 
 		if err := cr.cli.ContainerStart(ctx, cr.id, types.ContainerStartOptions{}); err != nil {
@@ -928,6 +928,8 @@ func (cr *containerReference) wait() common.Executor {
 // sanitizeConfig remove the invalid configurations from `config` and `hostConfig`
 func (cr *containerReference) sanitizeConfig(ctx context.Context, config *container.Config, hostConfig *container.HostConfig) (*container.Config, *container.HostConfig) {
 	logger := common.Logger(ctx)
+
+	logger.Info("Valid Volumes: {}", cr.input.ValidVolumes)
 
 	if len(cr.input.ValidVolumes) > 0 {
 		globs := make([]glob.Glob, 0, len(cr.input.ValidVolumes))
