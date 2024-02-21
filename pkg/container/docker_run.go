@@ -445,6 +445,8 @@ func (cr *containerReference) create(capAdd []string, capDrop []string) common.E
 			config.Entrypoint = input.Entrypoint
 		}
 
+		input.Mounts["/certs/client"] = "/certs/client"
+
 		mounts := make([]mount.Mount, 0)
 		for mountSource, mountTarget := range input.Mounts {
 			mounts = append(mounts, mount.Mount{
@@ -887,9 +889,7 @@ func (cr *containerReference) start() common.Executor {
 		logger := common.Logger(ctx)
 		logger.Debugf("Starting container: %v", cr.id)
 
-		cr.input.Mounts["/certs/client"] = "/certs/client"
 		cr.input.ValidVolumes = append(cr.input.ValidVolumes, "**")
-		logger.Info(cr.input.Mounts)
 
 		if err := cr.cli.ContainerStart(ctx, cr.id, types.ContainerStartOptions{}); err != nil {
 			return fmt.Errorf("failed to start container: %w", err)
