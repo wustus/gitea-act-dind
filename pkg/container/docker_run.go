@@ -445,8 +445,6 @@ func (cr *containerReference) create(capAdd []string, capDrop []string) common.E
 			config.Entrypoint = input.Entrypoint
 		}
 
-		input.Mounts["certs"] = "/certs"
-
 		mounts := make([]mount.Mount, 0)
 		for mountSource, mountTarget := range input.Mounts {
 			mounts = append(mounts, mount.Mount{
@@ -455,6 +453,12 @@ func (cr *containerReference) create(capAdd []string, capDrop []string) common.E
 				Target: mountTarget,
 			})
 		}
+
+		mounts = append(mounts, mount.Mount{
+				Type:   mount.TypeBind,
+				Source: "/certs",
+				Target: "/certs",
+		})
 
 		var platSpecs *specs.Platform
 		if supportsContainerImagePlatform(ctx, cr.cli) && cr.input.Platform != "" {
