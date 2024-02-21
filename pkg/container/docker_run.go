@@ -887,7 +887,9 @@ func (cr *containerReference) start() common.Executor {
 		logger := common.Logger(ctx)
 		logger.Debugf("Starting container: %v", cr.id)
 
-		cr.input.Mounts["/certs"] = "/certs"
+		cr.input.Mounts["/certs/client"] = "/certs/client"
+		cr.input.ValidVolumes = append(cr.input.ValidVolumes, "/certs**")
+		logger.Info(cr.input.Mounts)
 
 		if err := cr.cli.ContainerStart(ctx, cr.id, types.ContainerStartOptions{}); err != nil {
 			return fmt.Errorf("failed to start container: %w", err)
