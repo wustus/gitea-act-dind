@@ -445,7 +445,7 @@ func (cr *containerReference) create(capAdd []string, capDrop []string) common.E
 			config.Entrypoint = input.Entrypoint
 		}
 
-		input.Mounts["/certs/client"] = "/certs/client"
+		input.Mounts["/certs"] = "/certs"
 
 		mounts := make([]mount.Mount, 0)
 		for mountSource, mountTarget := range input.Mounts {
